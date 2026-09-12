@@ -409,11 +409,7 @@
         measurementId: "G-TD9D4KETD9"
     };
 
-    firebase.initializeApp({
-        apiKey: "AAAADLLcRsI:APA91bHkTmQiHwUUmH2USxE2qMkcQ3G2FFPhOplcPjIVMN8myQY62mwPffj7p8_Y58qmQ5V0m59CH71lM-9sVk8mNTi1shrJwUBZWl3n3CDtcqd54J42jYhWm-2JEyx4-zKD_L2zoMzP",
-        authDomain: "attendance-app-fdd08.firebaseapp.com",
-        projectId: 'attendance-app-fdd08'
-    });
+    firebase.initializeApp(firebaseConfig);
 
     let db = firebase.firestore();
 
