@@ -14,6 +14,86 @@ html {
 
 }
 
+.login-page {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #eef4ff 0%, #dfe9ff 100%);
+    font-family: 'Roboto', sans-serif;
+}
+
+.login-box {
+    width: min(92vw, 360px);
+    background: #fff;
+    padding: 32px 28px;
+    border-radius: 18px;
+    box-shadow: 0 14px 38px rgba(37, 99, 235, 0.12);
+}
+
+.login-box h2 {
+    margin: 0 0 18px;
+    text-align: center;
+    color: #1e293b;
+    font-size: 28px;
+}
+
+.login-box label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #334155;
+    font-weight: 600;
+}
+
+.login-box input {
+    width: 100%;
+    padding: 12px 14px;
+    margin-bottom: 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    font-size: 15px;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.login-box input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.login-box button {
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    background: #2563eb;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: 0.2s ease;
+    box-sizing: border-box;
+}
+
+.login-box button:hover {
+    background: #1d4ed8;
+}
+
+.login-box button:disabled {
+    background: #94a3b8;
+    cursor: not-allowed;
+}
+
+.login-box .error {
+    min-height: 20px;
+    margin-top: 8px;
+    margin-bottom: 10px;
+    color: #dc2626;
+    font-size: 14px;
+    text-align: center;
+}
 
 html::-webkit-scrollbar {
     width: 8px;
@@ -79,16 +159,36 @@ html::-webkit-scrollbar-thumb {
 
 .header-option {
     display: flex;
+    align-items: center;
     color: #343d49;
     font-size: 1.8rem;
     margin-right: 20px;
+    gap: 20px;
 }
 
 .header-option__schedule, .header-option__noti {
-    margin-right: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.header-option__logout {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 999px;
+    background: #fff;
+    color: #1f2937;
+    font-size: 1.3rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.header-option__logout:hover {
+    background: #f3f4f6;
 }
 
 .header-option__user img{

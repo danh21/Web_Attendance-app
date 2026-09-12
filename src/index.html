@@ -29,6 +29,11 @@
                     <i class="fa-solid fa-bell"></i>
                 </div>
     
+                <button class="header-option__logout" id="logoutBtn" type="button">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Logout</span>
+                </button>
+
                 <div class="header-option__user">
                     <img src="./rsc/img/user.png" alt="">
                 </div>
@@ -411,6 +416,21 @@
 
     firebase.initializeApp(firebaseConfig);
 
+    firebase.auth().onAuthStateChanged((user) => {
+        if (!user) {
+            window.location.href = "login.html";
+            return;
+        }
+    });
+
+    document.getElementById("logoutBtn")?.addEventListener("click", () => {
+        firebase.auth().signOut().then(() => {
+            window.location.href = "login.html";
+        }).catch((error) => {
+            console.error("Logout failed:", error);
+        });
+    });
+
     let db = firebase.firestore();
 
     function AddItem(record, employee) {
@@ -439,7 +459,6 @@
                 
                                             <div class="container-list-user-detail-date">
                                                 <p>${record.date}</p>
-                                                <span>Sunday</span>
                                             </div>
                 
                                             <div class="container-list-user-detail-login">
