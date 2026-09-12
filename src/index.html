@@ -726,82 +726,79 @@
         projectId: 'attendance-app-fdd08'
     });
 
-    let db = firebase.firestore()
-    var checkIn, checkOut, date;
-    db.collection("Employee").doc("1yXcA8m2BXGCeZm4Tb6p").collection("Record").get().then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            // console.log(`${doc.data().checkIn}`);
-            // console.log(`${doc.data().checkOut}`);
-            // console.log(`${doc.data().date}`);
-            // console.log(`${doc.data().name}`);
-            checkIn = doc.data().checkIn;
-            checkOut = doc.data().checkOut;
-            
-            name = doc.data().name;
-            date = doc.data().date;
-        });  
-        
-        // return checkIn, checkOut, date, name;
-    });
+    let db = firebase.firestore();
 
-    console.log(checkIn);
-    console.log(checkOut);
-    console.log(date);
-    console.log(name);
-
-    function AddItem() {
-    
+    function AddItem(record, employee) {
         const listUser = document.querySelector(".container-list-user-wrap");
         const newDiv = document.createElement("div");
-        console.log(newDiv);
+
         newDiv.className = "container-list-user";
-        newDiv.innerHTML = 
-                            `
-                                <div class="container-list-user-detail">
-                                    <div class="container-list-user-detail-infor">
-                                        <div class="container-list-user-detail-infor__img">
-                                            <img src="./../rsc/img/user.png" alt="">
+        newDiv.innerHTML =
+                                    `
+                                        <div class="container-list-user-detail">
+                                            <div class="container-list-user-detail-infor">
+                                                <div class="container-list-user-detail-infor__img">
+                                                    <img src="./../rsc/img/user.png" alt="">
+                                                </div>
+                
+                                                <div class="container-list-user-detail-infor__name">
+                                                    <p>${record.name}</p>
+                                                    <span>UI Designer</span>
+                                                </div>
+                                            </div>
+                
+                                            <div class="container-list-user-detail-depa">
+                                                <p>Development</p>
+                                                <span>Design Team</span>
+                                            </div>
+                
+                                            <div class="container-list-user-detail-date">
+                                                <p>${record.date}</p>
+                                                <span>Sunday</span>
+                                            </div>
+                
+                                            <div class="container-list-user-detail-login">
+                                                <p>${record.checkIn}</p>
+                                            </div>
+                
+                                            <div class="container-list-user-detail-logout">
+                                                <p>${record.checkOut}</p>
+                                            </div>
+                
+                                            <div class="container-list-user-detail-btn">
+                
+                                                <div class="container-list-user-detail-btn__view">
+                                                    <p>View</p>
+                                                </div>
+                                            </div>
                                         </div>
-        
-                                        <div class="container-list-user-detail-infor__name">
-                                            <p>${doc.data().name}</p>
-                                            <span>UI Designer</span>
-                                        </div>
-                                    </div>
-        
-                                    <div class="container-list-user-detail-depa">
-                                        <p>Development</p>
-                                        <span>Design Team</span>
-                                    </div>
-        
-                                    <div class="container-list-user-detail-date">
-                                        <p>${doc.data().date}</p>
-                                        <span>Sunday</span>
-                                    </div>
-        
-                                    <div class="container-list-user-detail-login">
-                                        <p>${doc.data().checkIn}</p>
-                                    </div>
-        
-                                    <div class="container-list-user-detail-logout">
-                                        <p>${doc.data().checkOut}</p>
-                                    </div>
-        
-                                    <div class="container-list-user-detail-btn">
-        
-                                        <div class="container-list-user-detail-btn__view">
-                                            <p>View</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            `
-        
+                                    `
+                
         listUser.appendChild(newDiv);
     }
 
-    window.onload = () => { 
-        AddItem(doc.data().name,doc.data().date,checkIn, checkOut);
+    async function AddAllItems() {
+        const listUser = document.querySelector(".container-list-user-wrap");
+        listUser.innerHTML = "";
+
+        const employeeSnapshot = await db.collection("Employee").get();
+        const recordQueries = employeeSnapshot.docs.map(async (employeeDoc) => {
+            const employee = employeeDoc.data();
+            const recordSnapshot = await employeeDoc.ref.collection("Record").get();
+
+            recordSnapshot.forEach((recordDoc) => {
+                AddItem(recordDoc.data(), employee);
+            });
+        });
+
+        await Promise.all(recordQueries);
     }
+
+    window.addEventListener("load", () => {
+        AddAllItems().catch((error) => {
+            console.error("Unable to load attendance records:", error);
+        });
+    });
 
 
 </script>
