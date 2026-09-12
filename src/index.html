@@ -409,11 +409,7 @@
         measurementId: "G-TD9D4KETD9"
     };
 
-    firebase.initializeApp({
-        apiKey: "***REMOVED***",
-        authDomain: "attendance-app-fdd08.firebaseapp.com",
-        projectId: 'attendance-app-fdd08'
-    });
+    firebase.initializeApp(firebaseConfig);
 
     let db = firebase.firestore();
 
