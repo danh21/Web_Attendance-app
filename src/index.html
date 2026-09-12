@@ -777,27 +777,81 @@
         listUser.appendChild(newDiv);
     }
 
-    async function AddAllItems() {
+    function ListenForAttendanceRecords() {
         const listUser = document.querySelector(".container-list-user-wrap");
-        listUser.innerHTML = "";
+        const employees = new Map();
+        const recordListeners = new Map();
+        const records = new Map();
 
-        const employeeSnapshot = await db.collection("Employee").get();
-        const recordQueries = employeeSnapshot.docs.map(async (employeeDoc) => {
+        function renderRecords() {
+            listUser.innerHTML = "";
+            records.forEach(({ record, employee }) => AddItem(record, employee));
+        }
+
+        function listenToEmployeeRecords(employeeDoc) {
+            const employeeId = employeeDoc.id;
             const employee = employeeDoc.data();
-            const recordSnapshot = await employeeDoc.ref.collection("Record").get();
-
-            recordSnapshot.forEach((recordDoc) => {
-                AddItem(recordDoc.data(), employee);
+            employees.set(employeeId, employee);
+            records.forEach((entry, recordKey) => {
+                if (recordKey.startsWith(`${employeeId}/`)) {
+                    entry.employee = employee;
+                }
             });
-        });
 
-        await Promise.all(recordQueries);
+            if (recordListeners.has(employeeId)) {
+                recordListeners.get(employeeId)();
+            }
+
+            const unsubscribe = employeeDoc.ref.collection("Record").onSnapshot(
+                (recordSnapshot) => {
+                    [...records.keys()]
+                        .filter((recordKey) => recordKey.startsWith(`${employeeId}/`))
+                        .forEach((recordKey) => records.delete(recordKey));
+
+                    recordSnapshot.forEach((recordDoc) => {
+                        records.set(`${employeeId}/${recordDoc.id}`, {
+                            record: recordDoc.data(),
+                            employee: employees.get(employeeId)
+                        });
+                    });
+
+                    renderRecords();
+                },
+                (error) => console.error(`Unable to listen to records for ${employeeId}:`, error)
+            );
+
+            recordListeners.set(employeeId, unsubscribe);
+        }
+
+        return db.collection("Employee").onSnapshot(
+            (employeeSnapshot) => {
+                const activeEmployeeIds = new Set();
+
+                employeeSnapshot.forEach((employeeDoc) => {
+                    activeEmployeeIds.add(employeeDoc.id);
+                    listenToEmployeeRecords(employeeDoc);
+                });
+
+                [...employees.keys()]
+                    .filter((employeeId) => !activeEmployeeIds.has(employeeId))
+                    .forEach((employeeId) => {
+                        const unsubscribe = recordListeners.get(employeeId);
+                        if (unsubscribe) unsubscribe();
+                        recordListeners.delete(employeeId);
+                        employees.delete(employeeId);
+                        [...records.keys()]
+                            .filter((recordKey) => recordKey.startsWith(`${employeeId}/`))
+                            .forEach((recordKey) => records.delete(recordKey));
+                    });
+
+                renderRecords();
+            },
+            (error) => console.error("Unable to listen to attendance records:", error)
+        );
     }
 
     window.addEventListener("load", () => {
-        AddAllItems().catch((error) => {
-            console.error("Unable to load attendance records:", error);
-        });
+        ListenForAttendanceRecords();
     });
 
 
