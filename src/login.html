@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login Attendance</title>
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body class="login-page">
+  <div class="login-box">
+    <h2>Login</h2>
+
+    <label for="email">Email</label>
+    <input type="email" id="email" placeholder="name@example.com" />
+
+    <label for="password">Password</label>
+    <input type="password" id="password" placeholder="Enter password" />
+
+    <div class="error" id="errorMsg"></div>
+    <button id="loginBtn">Login</button>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/8.2.10/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.2.10/firebase-auth.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAARZyIuLh3i_ViyEA-rncZDv8jNIXz_Sk",
+      authDomain: "attendance-app-fdd08.firebaseapp.com",
+      databaseURL: "https://attendance-app-fdd08-default-rtdb.firebaseio.com",
+      projectId: "attendance-app-fdd08",
+      storageBucket: "attendance-app-fdd08.appspot.com",
+      messagingSenderId: "54540388034",
+      appId: "1:54540388034:web:95e5ca236660ec023f5d5b",
+      measurementId: "G-TD9D4KETD9"
+    };
+
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            window.location.href = "index.html";
+        }
+    });
+
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const errorMsg = document.getElementById("errorMsg");
+    const loginBtn = document.getElementById("loginBtn");
+
+    loginBtn.addEventListener("click", () => {
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+
+      errorMsg.textContent = "";
+
+      if (!email || !password) {
+        errorMsg.textContent = "Please enter both email and password";
+        return;
+      }
+
+      loginBtn.disabled = true;
+      loginBtn.textContent = "Logging in...";
+
+      firebase.auth().signInWithEmailAndPassword(email, password)
+        .then(() => {
+          window.location.href = "index.html";
+        })
+        .catch((error) => {
+          console.error(error.code, error.message);
+          errorMsg.textContent = "Invalid email or password";
+          loginBtn.disabled = false;
+          loginBtn.textContent = "Login";
+        });
+    });
+  </script>
+</body>
+</html>

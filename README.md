@@ -15,6 +15,7 @@
 
 Static web prototype for an attendance management dashboard. The interface includes a search field, navigation sidebar, attendance summary cards, month selectors, and an attendance list view.
 
+- ✅ To write/read data from firestore, MUST login with correct authentication
 - ✅ Responsive dashboard layout built with HTML and CSS
 - ✅ Attendance summaries with monthly and yearly performance indicators
 - ✅ Profile cards with local avatar assets
@@ -25,12 +26,13 @@ Static web prototype for an attendance management dashboard. The interface inclu
 
 ```
 .
+├── .github/          # git workflow
 ├── src/              # application source
-│   ├── index.html    # dashboard markup
+│   ├── index.html    # main dashboard
+│   ├── login.html    # login page
 │   └── css/          # application styles
-├── rsc/              # static resources
-│   └── img/          # avatar image
-├── test/             # test scripts
+│   └── rsc/          # image
+├── test/             # test scripts (unused)
 ├── doc/              # documentation and notes
 ├── .gitignore
 └── README.md
