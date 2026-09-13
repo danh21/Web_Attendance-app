@@ -224,7 +224,8 @@ html::-webkit-scrollbar-thumb {
 
 /* ---------------- container --------------- */
 .container {
-    
+    display: flex;
+    flex-direction: column;
     background-color: #f0f4f9;
     height: calc(100vh - 46px);
     width: 100vw;
@@ -232,6 +233,7 @@ html::-webkit-scrollbar-thumb {
 }
 
 .container-header {
+    flex: 0 0 80px;
     height: 80px;
     width: 100%;
     display: flex;
@@ -283,6 +285,7 @@ html::-webkit-scrollbar-thumb {
 
 
 .container-infor {
+    flex: 0 0 260px;
     margin-left: 40px;
     text-align: center;
     display: flex;
@@ -416,9 +419,10 @@ html::-webkit-scrollbar-thumb {
 
 .container-list {
     display: block;
-    height: 320px;
+    flex: 1 1 auto;
+    min-height: 0;
     width: calc(100vw -40px);
-    margin: 30px 40px 10px 40px;
+    margin: 30px 40px 5vh 40px;
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
@@ -487,7 +491,16 @@ html::-webkit-scrollbar-thumb {
 }
 
 .container-list-user-wrap::-webkit-scrollbar {
-    display: none;
+    width: 8px;
+}
+
+.container-list-user-wrap::-webkit-scrollbar-track {
+    background: #f1f3f5;
+}
+
+.container-list-user-wrap::-webkit-scrollbar-thumb {
+    background-color: #b7bec8;
+    border-radius: 5rem;
 }
 
 .container-list-user {
